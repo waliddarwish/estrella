@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Function Plotter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- MaterializeCSS CDN -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" defer></script>
+  
+  <!-- Plotly -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: #f5f5f5;
+    }
+    main {
+      flex: 1 0 auto;
+      padding: 20px;
+    }
+    #plot {
+      width: 100%;
+      height: 70vh;
+    }
+    .plot-container {
+      margin-top: 30px;
+    }
+    .centered {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="blue darken-2">
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo">3D Function Plotter</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="card">
+      <div class="card-content">
+        <form id="form">
+          <div class="input-field">
+            <input type="text" id="expression" required>
+            <label for="expression">Enter function (in x and y)</label>
+          </div>
+
+          <p>
+            <label>
+              <input type="checkbox" id="useMathParser" />
+              <span>Use Custom MathParser</span>
+            </label>
+          </p>
+
+          <div class="centered" style="margin-top: 20px;">
+            <button class="btn waves-effect waves-light" type="submit">
+              Plot Function
+              <i class="material-icons right">show_chart</i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card plot-container">
+      <div class="card-content">
+        <div id="plot"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer blue darken-2">
+    <div class="container">
+      © 2025 3D Function Plotter by Walid Darwish
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      M.updateTextFields();
+    });
+
+    const form = document.getElementById('form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const expression = document.getElementById('expression').value;
+      const useMathParser = document.getElementById('useMathParser').checked;
+
+      const response = await fetch('/plot', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ expression, useMathParser })
+      });
+
+      const points = await response.json();
+
+      const x = points.map(p => p.x);
+      const y = points.map(p => p.y);
+      const z = points.map(p => p.z);
+
+      const data = [{
+        x: x,
+        y: y,
+        z: z,
+        type: 'mesh3d'
+      }];
+
+      const layout = {
+        margin: { l: 0, r: 0, b: 0, t: 0 },
+        scene: {
+          xaxis: { title: 'x' },
+          yaxis: { title: 'y' },
+          zaxis: { title: 'z' }
+        }
+      };
+
+      Plotly.newPlot('plot', data, layout);
+    });
+  </script>
+
+</body>
+</html>

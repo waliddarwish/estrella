@@ -1,0 +1,27 @@
+{
+  "name": "estrella",
+  "version": "1.0.0",
+  "description": "A simple neural network in javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waliddarwish/estrella.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/waliddarwish/estrella/issues"
+  },
+  "homepage": "https://github.com/waliddarwish/estrella#readme",
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.22.0",
+    "@tensorflow/tfjs-node-gpu": "^4.22.0",
+    "express": "^4.18.2",
+    "mathjs": "^12.4.1"
+  }
+}
+
